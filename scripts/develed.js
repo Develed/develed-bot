@@ -14,7 +14,7 @@ module.exports = function (robot) {
 
   robot.respond(/scrivi (.*)/i, function (res) {
     var msg = res.match[1].trim()
-    res.reply('Ok ' + res.message.user + ', invio "' + msg + '" a DeveLED!');
+    res.reply('Ok ' + res.message.user.name + ', invio "' + msg + '" a DeveLED!');
   });
 
 };
