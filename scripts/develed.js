@@ -42,6 +42,11 @@ module.exports = function (robot) {
     res.reply(res.random(frasi));
   });
 
+  robot.hear(/fernandello/i, function (res) {
+    res.send("Se ordinate al TuttoBene posso aiutarvi io!:tm:");
+  });
+
+
 /*
   robot.respond(/analizza (.*)/i, function (res) {
     var url = res.match[1].trim()
