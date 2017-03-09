@@ -12,6 +12,24 @@
 
 module.exports = function (robot) {
 
+  var CronJob = require('cron').CronJob;
+  var job = new CronJob('00 03 11,16 * * 1-5', function() {
+      var frasi = [
+        "@djeasy: ma non è l'ora di mangiare una fiesta :fiesta:?",
+        "@pietro: kaffééé! :pietro:",
+        "@db: è l'ora di fare una pausa, vai a prendere un caffé coi tuoi amici. :basile:",
+        "@andreasalti: c'è Renato che ti aspetta in lounge room con delle ragazzotte, fai una pausa!",
+      ];
+      var rnd = Math.floor(Math.random()*frasi.length);
+      robot.messageRoom("embeddedisbetter", frasi[rnd]);
+    }, function () {
+      /* This function is executed when the job stops */
+    },
+    true, /* Start the job right now */
+    "Europe/Rome" /* Time zone of this job. */
+  );
+  job.start();
+
   robot.respond(/scrivi (.*)/i, function (res) {
     var msg = res.match[1].trim()
     res.reply('Ok ' + res.message.user.name + ', invio "' + msg + '" a DeveLED!');
@@ -40,6 +58,12 @@ module.exports = function (robot) {
 
   robot.respond(/ciao/i, function (res) {
     res.reply(res.random(frasi));
+  });
+
+  robot.respond(/dici (.*)/i, function (res) {
+    if (res.message.user.name == "batt") {
+      robot.messageRoom("embeddedisbetter", res.match[1].trim());
+    }
   });
 
 /*
