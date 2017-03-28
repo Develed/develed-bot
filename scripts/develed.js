@@ -12,16 +12,19 @@
 
 module.exports = function (robot) {
 
+  var frasi_url = "https://dl.dropboxusercontent.com/s/nx7icory52foizv/lines.txt"
   var CronJob = require('cron').CronJob;
   var job = new CronJob('00 03 11,16 * * 1-5', function() {
-      var frasi = [
-        "@djeasy: ma non è l'ora di mangiare una fiesta :fiesta:?",
-        "@pietro: kaffééé! :pietro:",
-        "@db: è l'ora di fare una pausa, vai a prendere un caffé coi tuoi amici. :basile:",
-        "@andreasalti: c'è Renato che ti aspetta in lounge room con delle ragazzotte, fai una pausa!",
-      ];
-      var rnd = Math.floor(Math.random()*frasi.length);
-      robot.messageRoom("embeddedisbetter", frasi[rnd]);
+    robot.http(frasi_url).get()(function(err, resp, body) {
+        if (err) {
+          robot.messageRoom("embeddedisbetter", err);
+        }
+        else {
+          var frasi = body.split('\n');
+          var rnd = Math.floor(Math.random()*frasi.length);
+          robot.messageRoom("embeddedisbetter", frasi[rnd]);
+        }
+      });
     }, function () {
       /* This function is executed when the job stops */
     },
@@ -34,6 +37,20 @@ module.exports = function (robot) {
     var msg = res.match[1].trim()
     res.reply('Ok ' + res.message.user.name + ', invio "' + msg + '" a DeveLED!');
   });
+
+
+  robot.respond(/http (.*)/i, function (res) {
+    var url = res.match[1].trim()
+    robot.http(url)
+      .get()(function(err, resp, body) {
+        if (err) {
+          res.reply(err);
+        }
+        else
+          res.reply(body);
+      });
+  });
+
 
   var frasi = [
     'Che cosa accadrebbe se il male si formerebbe dentro di te?',
@@ -65,19 +82,4 @@ module.exports = function (robot) {
       robot.messageRoom("embeddedisbetter", res.match[1].trim());
     }
   });
-
-/*
-  robot.respond(/analizza (.*)/i, function (res) {
-    var url = res.match[1].trim()
-    robot.http("http://" + url)
-    	.get() function (err, res, body) {
-	    	if err
-	    		res.reply "Mi spiace, ma c'è stato un errore: #{err}"
-	    		return
-	    	
-	    	res.reply('Ok, ecco quello che ho preso:\n ' + body)
-	    }
-  });
-*/
-
 };
