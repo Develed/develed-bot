@@ -30,9 +30,6 @@ module.exports = function (robot) {
         var frasi = body.split('\n');
         var rnd = Math.floor(Math.random() * frasi.length);
         robot.messageRoom(room, frasi[rnd]);
-        var writerStream = fs.createWriteStream('/home/root/intext');
-        writerStream.write("text=" + frasi[rnd] + "\n" + "font=font4x7\n");
-        writerStream.end();
       }
     });
   }, function () {
@@ -42,25 +39,6 @@ module.exports = function (robot) {
     "Europe/Rome" /* Time zone of this job. */
   );
   job.start();
-
-  robot.respond(/scrivi (.*)/i, function (res) {
-    var msg = res.match[1].trim()
-    res.reply('Ok ' + res.message.user.name + ', invio "' + msg + '" a DeveLED!');
-  });
-
-
-  robot.respond(/http (.*)/i, function (res) {
-    var url = res.match[1].trim()
-    robot.http(url)
-      .get()(function (err, resp, body) {
-        if (err) {
-          res.reply(err);
-        }
-        else
-          res.reply(body);
-      });
-  });
-
 
   var frasi = [
     'Che cosa accadrebbe se il male si formerebbe dentro di te?',
