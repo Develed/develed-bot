@@ -15,7 +15,7 @@ module.exports = function (robot) {
 
   var fs = require('fs');
   var grpc = require('grpc');
-  var srv = grpc.load("../develed/services/services.proto").services;
+  var srv = grpc.load(process.env.SERVICE_PROTO_PATH).services;
 
   var textd = new srv.Textd('localhost:20001', grpc.credentials.createInsecure());
 
